@@ -13,7 +13,6 @@ class SettingBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isLightTheme = context.theme.brightness == Brightness.light;
-    //TODO Provider read, watch
     final LangService langService = context.watch();
     return BaseBottomSheet(
       child: Column(

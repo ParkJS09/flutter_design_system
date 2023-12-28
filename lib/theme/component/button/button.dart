@@ -93,7 +93,7 @@ class _ButtonState extends State<Button> {
             widget.size.padding,
           ),
           child: Row(
-            mainAxisSize: MainAxisSize.max,
+            mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               if (widget.icon != null)
