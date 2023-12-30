@@ -39,6 +39,7 @@ dependencies:
   provider: ^6.1.1
   intl: ^0.18.1
   flutter_svg: ^2.0.9
+  dio: ^5.4.0
 
 dev_dependencies:
   flutter_test:
