@@ -4,7 +4,9 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:house_of_tomorrow/src/model/product.dart';
 import 'package:house_of_tomorrow/src/service/theme_service.dart';
-import 'package:house_of_tomorrow/src/view/shopping/widget/produt_card.dart';
+import 'package:house_of_tomorrow/src/view/shopping/widget/product_card.dart';
+import 'package:house_of_tomorrow/src/view/shopping/widget/product_card_grid.dart';
+import 'package:house_of_tomorrow/src/view/shopping/widget/product_empty.dart';
 import 'package:house_of_tomorrow/theme/component/bottom_sheet/base_bottom_sheet.dart';
 import 'package:house_of_tomorrow/theme/component/bottom_sheet/setting_bottom_sheet.dart';
 import 'package:house_of_tomorrow/theme/component/button/button.dart';
@@ -23,6 +25,10 @@ class ShoppingView extends StatefulWidget {
 class _ShoppingViewState extends State<ShoppingView> {
   List<Product> productList = [];
 
+  TextEditingController textController = TextEditingController();
+
+  String get keyword => textController.text.trim();
+
   Future<void> searchProductList() async {
     try {
       final result = await NetworkHelper.dio.get(
@@ -32,6 +38,14 @@ class _ShoppingViewState extends State<ShoppingView> {
         () {
           productList = jsonDecode(result.data).map<Product>((json) {
             return Product.fromJson(json);
+          }).where((product) {
+            /// 키워드가 비어있는 경우 모두 반환
+            if (keyword.isEmpty) return true;
+
+            /// name이나 brand에 키워드 포함 여부 확인
+            return "${product.name}${product.brand}"
+                .toLowerCase()
+                .contains(keyword.toLowerCase());
           }).toList();
           print('productListSize : ${productList.length}');
         },
@@ -39,6 +53,12 @@ class _ShoppingViewState extends State<ShoppingView> {
     } catch (e, s) {
       log('failed to search produt list', error: e, stackTrace: s);
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    searchProductList();
   }
 
   @override
@@ -72,6 +92,10 @@ class _ShoppingViewState extends State<ShoppingView> {
               children: [
                 Expanded(
                   child: InputField(
+                    controller: textController,
+                    onClear: searchProductList,
+                    onSubmitted: (text) => searchProductList(),
+                    onChanged: (text) => searchProductList(),
                     hint: S.current.searchProduct,
                   ),
                 ),
@@ -85,10 +109,13 @@ class _ShoppingViewState extends State<ShoppingView> {
               ],
             ),
           ),
-          if (productList.isNotEmpty)
-            ProductCard(
-              product: productList[0],
-            ),
+          Expanded(
+            child: productList.isEmpty
+                ? const ProductEmpty()
+                : ProductCardGrid(
+                    productList,
+                  ),
+          ),
         ],
       ),
     );
