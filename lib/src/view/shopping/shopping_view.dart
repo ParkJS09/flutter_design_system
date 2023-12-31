@@ -10,6 +10,7 @@ import 'package:house_of_tomorrow/src/view/shopping/widget/product_empty.dart';
 import 'package:house_of_tomorrow/theme/component/bottom_sheet/base_bottom_sheet.dart';
 import 'package:house_of_tomorrow/theme/component/bottom_sheet/setting_bottom_sheet.dart';
 import 'package:house_of_tomorrow/theme/component/button/button.dart';
+import 'package:house_of_tomorrow/theme/component/hide_keyboard.dart';
 import 'package:house_of_tomorrow/theme/component/input_field.dart';
 import 'package:house_of_tomorrow/util/helper/network_helper.dart';
 import 'package:house_of_tomorrow/util/lang/generated/l10n.dart';
@@ -63,60 +64,62 @@ class _ShoppingViewState extends State<ShoppingView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(S.current.shopping),
-        actions: [
-          Button(
-            icon: 'option',
-            type: ButtonType.flat,
-            onPressed: () {
-              showModalBottomSheet(
-                context: context,
-                builder: (context) {
-                  return const SettingBottomSheet();
-                },
-              );
-            },
-          ),
-        ],
-      ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(
-              vertical: 8.0,
-              horizontal: 16.0,
+    return HideKeyboard(
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(S.current.shopping),
+          actions: [
+            Button(
+              icon: 'option',
+              type: ButtonType.flat,
+              onPressed: () {
+                showModalBottomSheet(
+                  context: context,
+                  builder: (context) {
+                    return const SettingBottomSheet();
+                  },
+                );
+              },
             ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: InputField(
-                    controller: textController,
-                    onClear: searchProductList,
-                    onSubmitted: (text) => searchProductList(),
-                    onChanged: (text) => searchProductList(),
-                    hint: S.current.searchProduct,
+          ],
+        ),
+        body: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                vertical: 8.0,
+                horizontal: 16.0,
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: InputField(
+                      controller: textController,
+                      onClear: searchProductList,
+                      onSubmitted: (text) => searchProductList(),
+                      onChanged: (text) => searchProductList(),
+                      hint: S.current.searchProduct,
+                    ),
                   ),
-                ),
-                SizedBox(
-                  width: 16.0,
-                ),
-                Button(
-                  onPressed: searchProductList,
-                  icon: 'search',
-                ),
-              ],
+                  const SizedBox(
+                    width: 16.0,
+                  ),
+                  Button(
+                    onPressed: searchProductList,
+                    icon: 'search',
+                  ),
+                ],
+              ),
             ),
-          ),
-          Expanded(
-            child: productList.isEmpty
-                ? const ProductEmpty()
-                : ProductCardGrid(
-                    productList,
-                  ),
-          ),
-        ],
+            Expanded(
+              child: productList.isEmpty
+                  ? const ProductEmpty()
+                  : ProductCardGrid(
+                      productList,
+                    ),
+            ),
+          ],
+        ),
       ),
     );
   }
