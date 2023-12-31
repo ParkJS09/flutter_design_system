@@ -1,15 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:house_of_tomorrow/src/model/product.dart';
+import 'package:house_of_tomorrow/src/view/product/widget/product_color_preview.dart';
 import 'package:house_of_tomorrow/theme/component/pop_button.dart';
 import 'package:house_of_tomorrow/util/lang/generated/l10n.dart';
 
-class ProductView extends StatelessWidget {
+class ProductView extends StatefulWidget {
   const ProductView({
     super.key,
     required this.product,
   });
 
   final Product product;
+
+  @override
+  State<ProductView> createState() => _ProductViewState();
+}
+
+class _ProductViewState extends State<ProductView> {
+  //선택한 수량
+  int _count = 1;
+  int _colorIndex = 0;
+  void onCountChanged(int newCount) {
+    setState(() {
+      _count = newCount;
+    });
+  }
+
+  void oncolorIndexChanged(int newColorIndex) {
+    setState(() {
+      _colorIndex = newColorIndex;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +41,12 @@ class ProductView extends StatelessWidget {
         // 타이틀 여백 제거
         titleSpacing: 0.0,
       ),
+      body: Column(children: [
+        ProductColorPreview(
+          colorIndex: _colorIndex,
+          product: widget.product,
+        )
+      ]),
     );
   }
 }
