@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:house_of_tomorrow/src/model/product.dart';
 import 'package:house_of_tomorrow/src/view/product/widget/product_color_preview.dart';
+import 'package:house_of_tomorrow/theme/component/color_picker.dart';
 import 'package:house_of_tomorrow/theme/component/pop_button.dart';
 import 'package:house_of_tomorrow/util/lang/generated/l10n.dart';
 
@@ -41,12 +42,23 @@ class _ProductViewState extends State<ProductView> {
         // 타이틀 여백 제거
         titleSpacing: 0.0,
       ),
-      body: Column(children: [
-        ProductColorPreview(
-          colorIndex: _colorIndex,
-          product: widget.product,
-        )
-      ]),
+      body: Wrap(
+        runSpacing: 32.0,
+        alignment: WrapAlignment.center,
+        children: [
+          ProductColorPreview(
+            colorIndex: _colorIndex,
+            product: widget.product,
+          ),
+          ColorPicker(
+            colorIndex: _colorIndex,
+            colorList: widget.product.productColorList.map((e) {
+              return e.color;
+            }).toList(),
+            onColorSelected: oncolorIndexChanged,
+          ),
+        ],
+      ),
     );
   }
 }
