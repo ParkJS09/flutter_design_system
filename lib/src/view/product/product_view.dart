@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:house_of_tomorrow/src/model/cart_item.dart';
 import 'package:house_of_tomorrow/src/model/product.dart';
+import 'package:house_of_tomorrow/src/service/cart_service.dart';
 import 'package:house_of_tomorrow/src/view/product/widget/product_bottom_sheet.dart';
 import 'package:house_of_tomorrow/src/view/product/widget/product_color_preview.dart';
 import 'package:house_of_tomorrow/src/view/product/widget/product_desc.dart';
+import 'package:house_of_tomorrow/theme/component/cart_button.dart';
 import 'package:house_of_tomorrow/theme/component/color_picker.dart';
 import 'package:house_of_tomorrow/theme/component/counter_button.dart';
 import 'package:house_of_tomorrow/theme/component/pop_button.dart';
 import 'package:house_of_tomorrow/util/lang/generated/l10n.dart';
+import 'package:provider/provider.dart';
 
 class ProductView extends StatefulWidget {
   const ProductView({
@@ -22,18 +26,30 @@ class ProductView extends StatefulWidget {
 
 class _ProductViewState extends State<ProductView> {
   //선택한 수량
-  int _count = 1;
-  int _colorIndex = 0;
+  int count = 1;
+  int colorIndex = 0;
   void onCountChanged(int newCount) {
     setState(() {
-      _count = newCount;
+      count = newCount;
+      print('count -> $count');
     });
   }
 
-  void oncolorIndexChanged(int newColorIndex) {
+  void onColorIndexChanged(int newColorIndex) {
     setState(() {
-      _colorIndex = newColorIndex;
+      colorIndex = newColorIndex;
     });
+  }
+
+  void onAddToCartPressed() {
+    final CartService cartService = context.read();
+    final CartItem newCartItem = CartItem(
+      product: widget.product,
+      colorIndex: colorIndex,
+      count: count,
+      isSelected: true,
+    );
+    cartService.add(newCartItem);
   }
 
   @override
@@ -44,6 +60,9 @@ class _ProductViewState extends State<ProductView> {
         leading: const PopButton(),
         // 타이틀 여백 제거
         titleSpacing: 0.0,
+        actions: const [
+          CartButton(),
+        ],
       ),
       body: Column(
         children: [
@@ -57,15 +76,15 @@ class _ProductViewState extends State<ProductView> {
                 alignment: WrapAlignment.center,
                 children: [
                   ProductColorPreview(
-                    colorIndex: _colorIndex,
+                    colorIndex: colorIndex,
                     product: widget.product,
                   ),
                   ColorPicker(
-                    colorIndex: _colorIndex,
+                    colorIndex: colorIndex,
                     colorList: widget.product.productColorList.map((e) {
                       return e.color;
                     }).toList(),
-                    onColorSelected: oncolorIndexChanged,
+                    onColorSelected: onColorIndexChanged,
                   ),
                   ProductDesc(
                     product: widget.product,
@@ -76,9 +95,9 @@ class _ProductViewState extends State<ProductView> {
           ),
           ProductBottomSheet(
             product: widget.product,
-            count: _count,
+            count: count,
             onCountChanged: onCountChanged,
-            onAddToCartPressed: () {},
+            onAddToCartPressed: onAddToCartPressed,
           ),
         ],
       ),
