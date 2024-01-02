@@ -17,6 +17,7 @@ class CounterButton extends StatelessWidget {
   Widget build(BuildContext context) {
     bool isMinusActive = count > 1;
     return Wrap(
+      crossAxisAlignment: WrapCrossAlignment.center,
       spacing: 16.0,
       children: [
         GestureDetector(
