@@ -24,6 +24,7 @@ class CounterBadge extends StatelessWidget {
           top: 10.0,
           right: 6.0,
           child: IgnorePointer(
+            //자식위젯에서 이벤트를 뺏는 이슈 처리
             ignoring: true,
             child: CircleAvatar(
               backgroundColor: context.color.secondary,
