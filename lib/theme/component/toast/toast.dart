@@ -9,14 +9,25 @@ abstract class Toast {
       seconds: 3,
     ),
   }) async {
+    GlobalKey<ToastBuilderState> toastKey = GlobalKey();
     final overlay = Overlay.of(context);
+    const animDuration = Duration(milliseconds: 333);
     final toast = OverlayEntry(
       builder: (context) => ToastBuilder(
+        key: toastKey,
         text: text,
+        animDuration: animDuration,
       ),
     );
     overlay.insert(toast);
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      toastKey.currentState?.isShow = true;
+    });
+
     await Future.delayed(duration);
+    toastKey.currentState?.isShow = false;
+    await Future.delayed(animDuration);
     toast.remove();
   }
 }
