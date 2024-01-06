@@ -51,7 +51,7 @@ class _ProductViewState extends State<ProductView> {
       isSelected: true,
     );
     cartService.add(newCartItem);
-    Toast.show(context, S.current.productAdded(widget.product.name));
+    Toast.show(S.current.productAdded(widget.product.name));
   }
 
   @override

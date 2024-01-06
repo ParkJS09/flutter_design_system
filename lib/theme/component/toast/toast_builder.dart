@@ -17,6 +17,7 @@ class ToastBuilder extends StatefulWidget {
   State<ToastBuilder> createState() => ToastBuilderState();
 }
 
+//외부에서 접근하기 위하여 ToastBuilderState를 전역으로 수정
 class ToastBuilderState extends State<ToastBuilder> {
   bool _isShow = false;
 
